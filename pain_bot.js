@@ -28,7 +28,7 @@ client.on('message', async message => {
     if (message.content.startsWith(helpPrefix)){help = true;} else {help = false;}
 
     const args = message.content.slice(prefix.length).split(/ +/);
-    if(args == ""){
+    if(args == ""  && !help){
         return message.reply(`You have to provide a command dumbass.`);
     }
     const command = args.shift().toLocaleLowerCase();

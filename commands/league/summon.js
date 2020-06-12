@@ -1,17 +1,27 @@
 const fetch = require('../../node_modules/node-fetch');
 const Discord  = require('discord.js');
 var champUrl = 'http://ddragon.leagueoflegends.com/cdn/10.11.1/data/en_US/champion/';
-var skinsUrl = 'http://ddragon.leagueoflegends.com/cdn/img/champion/splash/'
+var splashUrl = 'http://ddragon.leagueoflegends.com/cdn/img/champion/splash/';
+var iconUrl = 'http://ddragon.leagueoflegends.com/cdn/10.11.1/img/champion/';
 var headers = {
-    "X-Riot-Token": "RGAPI-8065064c-950f-4756-baa1-08428f6e4117"
+    "X-Riot-Token": "Get your own token"
 }
-const exampleEmbed = new Discord.MessageEmbed();
+
 module.exports = {
 	name: 'summon',
-	description: 'Shows default splash art, description, and abilities for a champion',
+	description: 'Shows default splash art, description, and roles for a champion. Just include the champion name after $summon.',
 	nsfw: false,
 	async execute(message, args) {
-        const champName = args.join();
+        const exampleEmbed = new Discord.MessageEmbed();
+        const champName = joinAndCapitalize(args);
+        
+        function joinAndCapitalize(arr) {
+          arr.forEach((element, index) => {
+            arr[index] = element.charAt(0).toUpperCase() + element.slice(1);
+          });
+          return arr.join('');
+        }
+        
         const file = await fetch(champUrl + champName + '.json', {headers: headers}).then((res) => {
         return res.json();
       });
@@ -24,18 +34,16 @@ module.exports = {
       .setColor('#0099ff')
       .setTitle(`${champion.name}, ${champion.title}`)
       .setAuthor('Grim', 'https://avatars1.githubusercontent.com/u/25421530?s=460&u=0d8b148ebdddf4f8343861dbb0111d2bada5e79c&v=4', 'https://github.com/CEOofHentai')
-      .setDescription('Some description here')
-      .setThumbnail('https://i.imgur.com/wSTFkRM.png')
+      //.setDescription(champion.lore)
+      .setThumbnail(iconUrl + champion.id + '.png')
       .addFields(
-        { name: 'Regular field title', value: 'Some value here' },
-        { name: '\u200B', value: '\u200B' },
-        { name: 'Inline field title', value: 'Some value here', inline: true },
-        { name: 'Inline field title', value: 'Some value here', inline: true },
+        { name: 'Lore:', value: champion.lore, inline: true },
+        { name: 'Roles:', value: champion.tags },
       )
-      .addField('Inline field title', 'Some value here', true)
-      .setImage('https://i.imgur.com/wSTFkRM.png')
+      .setImage(splashUrl + champion.id + '_0.jpg')
       .setTimestamp()
-      .setFooter('Some footer text here', 'https://i.imgur.com/wSTFkRM.png');
+      .setFooter(champion.name == 'Akali' ? '\"Goddamn she fine as hell\" ~Grim' : 'Gonna add links for more info per champ later', 
+       'https://avatars1.githubusercontent.com/u/25421530?s=460&u=0d8b148ebdddf4f8343861dbb0111d2bada5e79c&v=4');
 
       message.channel.send(exampleEmbed);
     },
