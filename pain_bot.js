@@ -52,7 +52,6 @@ client.on('message', async message => {
     } else {
         let catList = catIterator.next();
     //Dynamic general command controller
-    //categories.forEach((value, key, map) => {
         while (!catList.done){
         if(catList.value.has(command)) {
             const target = catList.value.get(command);
@@ -61,13 +60,17 @@ client.on('message', async message => {
                  family members seeing something they weren\'t supposed to.");
                  return;
             } else {
+                //Set command arguments to lower case to make handling easier in command mappings
+                args.forEach((element, index) => {
+                    args[index] = element.toLocaleLowerCase();
+                  });
+
             (help ? target.help(message) : target.execute(message, args));
             return;
             }
         } 
         catList = catIterator.next();
     }
-    //});
     message.channel.send("Dunno what that command is. Try again");
     }   
  });

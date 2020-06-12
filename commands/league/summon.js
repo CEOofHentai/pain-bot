@@ -27,14 +27,11 @@ module.exports = {
       });
       const champion = file.data[champName];
       console.log(`${champion.name}, ${champion.title}` );
-      
 
-      // inside a command, event listener, etc.
       exampleEmbed
       .setColor('#0099ff')
       .setTitle(`${champion.name}, ${champion.title}`)
       .setAuthor('Grim', 'https://avatars1.githubusercontent.com/u/25421530?s=460&u=0d8b148ebdddf4f8343861dbb0111d2bada5e79c&v=4', 'https://github.com/CEOofHentai')
-      //.setDescription(champion.lore)
       .setThumbnail(iconUrl + champion.id + '.png')
       .addFields(
         { name: 'Lore:', value: champion.lore, inline: true },

@@ -9,9 +9,9 @@ module.exports = {
 	async execute(message) {
 
         booru.posts({ tags: 'animal_ears order:random rating:explicit', limit:10}).then(posts => {
-            // Select a random post from posts array
             const index = Math.floor(Math.random() * posts.length);
             const post = posts[index];
+
             for(const tag of forbiddenTags) {
                 if(post.tag_string_general.includes(tag)){
                 message.channel.send(`The found picture contained the tag \"${tag}\", so Grim told me not to show it here. Try again.`)
