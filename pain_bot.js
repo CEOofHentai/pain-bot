@@ -19,7 +19,13 @@ client.on('ready', () =>{
 console.log(client.user.tag + " has come online")
 client.user.setActivity("Hentai", {type: "WATCHING"});
 //client.user.setStatus("invisible");
+if(client.user.presence.status != "invisible"){
+    client.channels.fetch('703000107016126608')
+    .then(channel => channel.send("\`Pain-bot online. All functions ready for use. Fuck The Last of Us 2\`"))
+    .catch(console.error);
+    }  
 });
+
 
 //Bot message handling
 client.on('message', async message => {
@@ -28,12 +34,16 @@ client.on('message', async message => {
     if (message.content.startsWith(helpPrefix)){help = true;} else {help = false;}
 
     const args = message.content.slice(prefix.length).split(/ +/);
+    console.log(`args: ${args}`);
     if(args == ""  && !help){
         return message.reply(`You have to provide a command dumbass.`);
-    }
+    } else if (args[0].includes(helpPrefix) || args[0].includes(prefix)) {return};
+    
     const command = args.shift().toLocaleLowerCase();
+    console.log(`command: ${command}`);
     let comList = "";
     let catIterator = categories.values();
+
     //$help Command controller
     if(command == "help"){
         let catList = catIterator.next();
@@ -51,6 +61,7 @@ client.on('message', async message => {
         return;
     } else {
         let catList = catIterator.next();
+
     //Dynamic general command controller
         while (!catList.done){
         if(catList.value.has(command)) {
@@ -64,7 +75,7 @@ client.on('message', async message => {
                 args.forEach((element, index) => {
                     args[index] = element.toLocaleLowerCase();
                   });
-
+                  
             (help ? target.help(message) : target.execute(message, args));
             return;
             }
