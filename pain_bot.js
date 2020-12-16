@@ -1,14 +1,16 @@
 //Dependencies
-const { Client, MessageAttachment, Discord } = require('discord.js');
+const {Client, MessageAttachment} = require('discord.js');
+const Discord = require('discord.js');
 const fs = require('fs');
 const { prefix, helpPrefix, token } = require('./config.json');
-
+const fetch = require('node-fetch');
 //Local variables
 const client = new Client();
 const commandPaths = fs.readdirSync('./commands')//.filter(file => file.endsWith('.js'));
 let help;
+let stealth = false;
 let categories = new Map();
-
+let replyEmbed = new Discord.MessageEmbed();
 //Dynamically set commands as key/value pairs in a map within a category map for subdirectories
 for (const dir of commandPaths) {
     categories.set(dir, mapPath(`./commands/${dir}`));
@@ -16,31 +18,54 @@ for (const dir of commandPaths) {
 
 //Bring bot online and set status
 client.on('ready', () =>{
-console.log(client.user.tag + " has come online")
-client.user.setActivity("Hentai", {type: "WATCHING"});
-//client.user.setStatus("invisible");
-if(client.user.presence.status != "invisible"){
-    client.channels.fetch('703000107016126608')
-    .then(channel => channel.send("\`Pain-bot online. All functions ready for use. Fuck The Last of Us 2\`"))
-    .catch(console.error);
-    }  
+    stealth ? client.user.setStatus("invisible") : client.user.setActivity("Hentai", {type: "WATCHING"});
+    console.log(client.user.tag + " has come online")
 });
 
 
 //Bot message handling
 client.on('message', async message => {
 
-    if (!message.content.startsWith(prefix) && !message.content.startsWith(helpPrefix) || message.author.bot) {return};
-    if (message.content.startsWith(helpPrefix)){help = true;} else {help = false;}
+    if(message.content.toLocaleLowerCase().startsWith("f u grim")){
+        if(message.author.username == "Big Chuck") {
+            replyEmbed.setImage(
+                await fetch(`https://api.giphy.com/v1/gifs/random?api_key=djk9phdua3bjPXYQqps6YftzXUAkTGrU&tag=love`)
+                .then(response => response.json()).then(json => json.data.images.original.url)
+            );
+            message.reply('Thx bb I luv u', replyEmbed);
+        } else {
+    replyEmbed.setImage(
+        await fetch(`https://api.giphy.com/v1/gifs/random?api_key=djk9phdua3bjPXYQqps6YftzXUAkTGrU&tag=middlefinger`)
+        .then(response => response.json()).then(json => json.data.images.original.url)
+    
+    );
+    message.reply('fuck you too bitch', replyEmbed);
+    }
+  }
+
+    //Non-response conditions
+    if (!message.content.startsWith(prefix) && !message.content.startsWith(helpPrefix) || message.author.bot) {return}
+    else if(stealth && message.channel.name != 'bot-testing'){return}
 
     const args = message.content.slice(prefix.length).split(/ +/);
-    console.log(`args: ${args}`);
-    if(args == ""  && !help){
-        return message.reply(`You have to provide a command dumbass.`);
-    } else if (args[0].includes(helpPrefix) || args[0].includes(prefix)) {return};
+    if(args[0] == "" || args[0].startsWith(prefix) || args[0].startsWith(helpPrefix) || args[0].match(/^\d/)){return}
+    else if (message.content.startsWith(helpPrefix)){help = true;} else {help = false;}
+
+    //User specific handling
+    /*if(message.author.username == "AdultMovies"){
+        if(Math.random() < 0.5) {
+            message.channel.send("\`stfu dumb boot\`\nhttps://www.gif-vif.com/Boot-cake.gif")
+        }
+         else {
+            message.channel.send("\`Get fucked nerd. Talking all that shit\`\nhttps://media1.tenor.com/images/93eeff31d2465edaaab3aa23634f7a75/tenor.gif?itemid=5297632")
+         }
     
+        return;
+    }
+*/
     const command = args.shift().toLocaleLowerCase();
-    console.log(`command: ${command}`);
+    //console.log(`command: ${command}`);
+    //console.log(`arguments: ${args}`);
     let comList = "";
     let catIterator = categories.values();
 

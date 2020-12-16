@@ -26,7 +26,7 @@ module.exports = {
         return res.json();
       });
       const champion = file.data[champName];
-      console.log(`${champion.name}, ${champion.title}` );
+      //console.log(`${champion.name}, ${champion.title}` );
 
       exampleEmbed
       .setColor('#0099ff')

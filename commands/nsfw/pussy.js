@@ -13,7 +13,7 @@ module.exports = {
 	   'https://avatars1.githubusercontent.com/u/25421530?s=460&u=0d8b148ebdddf4f8343861dbb0111d2bada5e79c&v=4');
 
 		const file = await fetch(`https://nekobot.xyz/api/image?type=pussy`).then(response => response.json()).then(json => json.message);
-		console.log(file);
+		//console.log(file);
      	resultEmbed.setImage(file);
      	message.channel.send(resultEmbed);
 	},

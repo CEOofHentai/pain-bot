@@ -17,7 +17,7 @@ module.exports = {
 
                 let index = Math.floor(Math.random() * sites.length);
                 let result = await searchBoorusFor(sites[index], 'animal_ears');
-                console.log(result);
+                //console.log(result);
 
                 if (forbiddenTags.includes(result)) {
                     resultEmbed.setDescription(`The found picture contained the tag \"${result}\", so Grim told me not to show it here. Try again.`);
